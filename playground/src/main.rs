@@ -27,7 +27,7 @@ pub fn artichoke_web_repl_init() -> u32 {
             panic!("Could not initialize interpreter");
         }
     };
-    interp.borrow_mut().capture_output();
+    interp.0.borrow_mut().capture_output();
     interp.push_context(Context::new(REPL_FILENAME));
     let mut state = Box::new(State {
         interp,
@@ -36,7 +36,7 @@ pub fn artichoke_web_repl_init() -> u32 {
     let build = meta::build_info();
     println!("{}", build);
     state.heap.allocate(build);
-    println!("{:?}", state.interp.borrow());
+    println!("{:?}", state.interp.0.borrow());
     Box::into_raw(state) as u32
 }
 
@@ -107,7 +107,7 @@ pub fn artichoke_eval(state: u32, ptr: u32) -> u32 {
     };
     let result = format!(
         "{}{}",
-        state.interp.borrow_mut().get_and_clear_captured_output(),
+        state.interp.0.borrow_mut().get_and_clear_captured_output(),
         result
     );
     let s = state.heap.allocate(result);
